@@ -15,7 +15,7 @@ buzzer.elf: ${COMMON_OBJECTS} buzzer.o buzzerMain.o ../lib/libTimer.a
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^
 
 load: buzzer.elf
-	DYLD_LIBRARY_PATH=/opt/ti/msp430-gcc/bin mspdebug tilib "prog $(TARGET).elf"
+	mspdebug tilib "prog $^"
 
 buzzer.c: buzzer.h
 buzzerMain.c: buzzer.h

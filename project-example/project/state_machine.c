@@ -12,8 +12,7 @@ static enum {START, MENU_0, MENU_1, GAME_PIANO, GAME_LED_0, GAME_LED_1, GAME_LED
 // The delay for the LED game
 static short random_delay = 0;
 
-// External buzzer state
-char buzzer_state;
+// External buzzer state:
 
 void state_update(){
   switch (current_state){

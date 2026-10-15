@@ -1,84 +1,8 @@
-#include "../include/utils.h"
-#include "../include/tokenizer.h"
+#include "utils.h"
+#include "tokenizer.h"
 #include <stdio.h>
 
-#define ZERO '0' // 48
-#define NINE '9' // 57
 #define LIMIT 5
-
-short str_len(char *str)
-{
-    short len = 0;
-
-    while (*(str++) != '\0')
-    {
-        len++;
-    }
-
-    return len;
-}
-
-short token_len(char *str)
-{
-    short len = 0;
-
-    while (is_non_space_char(*(str++)))
-    {
-        len++;
-    }
-
-    return len;
-}
-
-int is_history_cmmd(char *str)
-{
-    char history[] = "history";
-
-    for (int i = 0; i < (int)sizeof(history) - 1; i++)
-    {
-        if (str[i] == '\n' || str[i] == '\0' || str[i] != history[i])
-        {
-            return 0;
-        }
-    }
-
-    return 1;
-}
-
-int is_quit_cmmd(char *str)
-{
-    char quit[] = "quit";
-
-    for (int i = 0; i < (int)sizeof(quit) - 1; i++)
-    {
-        if (str[i] == '\n' || str[i] == '\0' || str[i] != quit[i])
-        {
-            return 0;
-        }
-    }
-
-    return 1;
-}
-
-int is_clear_cmmd(char *str)
-{
-    char clear[] = "clear";
-
-    for (int i = 0; i < (int)sizeof(clear) - 1; i++)
-    {
-        if (str[i] == '\n' || str[i] == '\0' || str[i] != clear[i])
-        {
-            return 0;
-        }
-    }
-
-    return 1;
-}
-
-int is_retrieval_cmmd(char *str)
-{
-    return str[0] == '!';
-}
 
 int is_char_num(char c)
 {
@@ -104,14 +28,4 @@ int get_numeric_val(char *str)
     }
 
     return val;
-}
-
-void remove_newln(char *str)
-{
-    while (*str != '\n')
-    {
-        str++;
-    }
-
-    *str = '\0';
 }

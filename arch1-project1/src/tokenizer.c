@@ -1,5 +1,5 @@
-#include "../include/tokenizer.h"
-#include "../include/utils.h"
+#include "tokenizer.h"
+#include "strings.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -116,7 +116,7 @@ void print_tokens(char **tokens)
 {
     for (int i = 0; tokens[i] != NULL; i++)
     {
-        printf("%cT[%d]: %s", i ? '\n' : '\0', i, tokens[i]);
+        printf("%cT[%d]: %s", i ? '\n' : '\n', i, tokens[i]);
     }
 }
 

@@ -1,19 +1,26 @@
-#include "../include/tokenizer.h"
-#include "../include/history.h"
-#include "../include/utils.h"
+#include "tokenizer.h"
+#include "history.h"
+#include "utils.h"
+#include "strings.h"
+#include "commands.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
 // CTRL C
 
-int main(int argc, char const *argv[])
+int main()
 {
 
     List *history = init_history();
     char buffer[100];
     char **tokens = NULL;
 
-    while (1)
+    Input_Type type = TEXT;
+
+    print_help_cmd();
+
+    while (type != EXIT)
     {
 
         fputs("\n> ", stdout);
@@ -23,7 +30,7 @@ int main(int argc, char const *argv[])
             continue;
         }
 
-        remove_newln(buffer);
+        str_remove_newln(buffer);
 
         tokens = tokenize(buffer);
 
@@ -32,62 +39,85 @@ int main(int argc, char const *argv[])
 
         add_history(history, buffer);
 
-        char *first_token = &(tokens[0][0]);
+        type = get_input_type(tokens);
 
-        if (is_history_cmmd(first_token))
+        switch (type)
         {
-            print_history(history);
-        }
-        else if (is_retrieval_cmmd(first_token))
-        {
-            int item_id = get_numeric_val(first_token + 1);
-
-            if (item_id == -1)
-            {
-                printf("\n!#: invalid option: %s", first_token);
-            }
-            else
-            {
-                char *s = get_history(history, item_id);
-
-                if (s == NULL)
-                {
-                    fputs("\n!#: no such history item exists", stdout);
-                }
-                else
-                {
-                    printf("H[%d]: %s\n", item_id, s);
-                    tokens = tokenize(s);
-                    print_tokens(tokens);
-                }
-            }
-        }
-        else if (is_quit_cmmd(first_token))
-        {
-            free_tokens(tokens);
-            free(tokens);
-            tokens = NULL;
+        case EXIT:
+            fputs("\nfreeing tokens...", stdout);
             break;
-        }
-        else if (is_clear_cmmd(first_token))
-        {
+        case HELP:
+            print_help_cmd();
+            break;
+        case HISTORY:
+            print_history(history);
+            break;
+        case HISTORY_CLEAR:
             free_history(history);
             free(history);
             history = NULL;
             history = init_history();
-        }
-        else
-        {
+            break;
+        case HISTORY_GET:;
+            int item_id = get_numeric_val(&(tokens[1][0]));
+
+            if (item_id == -1)
+            {
+                printf("\nhistory: invalid option: %s", &(tokens[1][0]));
+                break;
+            }
+
+            char *req_item = get_history(history, item_id);
+
+            if (req_item == NULL)
+            {
+                fputs("\nhistory: no such history item exists", stdout);
+                break;
+            }
+            else
+            {
+                printf("\nH[%d]: %s\n", item_id, req_item);
+                tokens = tokenize(req_item);
+                print_tokens(tokens);
+            }
+            break;
+        case DEFAULT_GET:;
+            int item_id_2 = get_numeric_val(&(tokens[0][1]));
+
+            if (item_id_2 == -1)
+            {
+                printf("\n!#: invalid option: %s", &(tokens[0][1]));
+                break;
+            }
+
+            char *req_item_2 = get_history(history, item_id_2);
+
+            if (req_item_2 == NULL)
+            {
+                fputs("\n!#: no such history item exists", stdout);
+                break;
+            }
+            else
+            {
+                printf("\nH[%d]: %s\n", item_id_2, req_item_2);
+                tokens = tokenize(req_item_2);
+                print_tokens(tokens);
+            }
+            break;
+        default:
             print_tokens(tokens);
         }
+
         free_tokens(tokens);
         free(tokens);
         tokens = NULL;
     }
 
+    fputs("\nfreeing history...", stdout);
     free_history(history);
     free(history);
     history = NULL;
+    fputs("\nBye!", stdout);
 
     return 0;
 }

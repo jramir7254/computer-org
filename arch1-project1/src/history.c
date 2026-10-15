@@ -1,6 +1,7 @@
-#include "../include/history.h"
-#include "../include/tokenizer.h"
-#include "../include/utils.h"
+#include "history.h"
+#include "tokenizer.h"
+#include "utils.h"
+#include "strings.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -72,7 +73,7 @@ void print_history(List *list)
     Item *temp = list->root;
     while (temp != NULL)
     {
-        printf("%cH[%d]: %s", temp->id ? '\n' : '\0', temp->id, temp->str);
+        printf("%cH[%d]: %s", temp->id ? '\n' : '\n', temp->id, temp->str);
         temp = temp->next;
     }
 }

@@ -7,12 +7,12 @@
 
 #define LED BIT6		/* note that bit zero req'd for display */
 
-#define SW1 1
-#define SW2 2
-#define SW3 4
-#define SW4 8
+#define SW1 BIT0
+#define SW2 BIT1
+#define SW3 BIT2
+#define SW4 BIT3
 
-#define SWITCHES 15
+#define SWITCHES (SW1 | SW2 | SW3 | SW4)
 
 char blue = 31, green = 0, red = 31;
 unsigned char step = 0;

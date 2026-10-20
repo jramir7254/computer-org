@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #ifndef UTILS_H
 #define UTILS_H
 
@@ -30,4 +31,13 @@ void remove_newln(char *str);
 
 int get_numeric_val(char *str);
 
+=======
+#ifndef UTILS_H
+#define UTILS_H
+
+int is_char_num(char c);
+
+int get_numeric_val(char *str);
+
+>>>>>>> origin
 #endif

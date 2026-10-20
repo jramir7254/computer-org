@@ -1,57 +1,67 @@
-#include "leds.h"
+#include "../include/leds.h"
 
 void leds_init()
 {
-	P1DIR |= LEDS;
-	P1OUT &= ~LEDS;
-	P1OUT |= RED_LED;
+    P1OUT &= ~LEDS;
+    P1DIR |= LEDS;
 }
 
-// global state vars that control blinking
-int blinkLimit = 8;  // duty cycle = 1/blinkLimit
-int blinkCount = 0;  // cycles 0...blinkLimit-1
-int active_led = NONE;
-void dim_red_led()
+Color active_led_color;
+Brightness active_led_brightness;
+
+void led_on(Color color)
 {
-	blinkCount ++;
-	if (blinkCount >= blinkLimit) { // on for 1 interrupt period
-		blinkCount = 0;
-		P1OUT |= RED_LED;
-	} else		          // off for blinkLimit - 1 interrupt periods
-    P1OUT &= ~RED_LED;
+    P1OUT |= color == RED ? RED_LED : GREEN_LED;
 }
 
-
-void dim_green_led()
- {
-      blinkCount ++;
-      if (blinkCount >= blinkLimit) { // on for 1 interrupt period
-          blinkCount = 0;
-         P1OUT |= GREEN_LED;
-     } else                // off for blinkLimit - 1 interrupt periods
-     P1OUT &= ~GREEN_LED;
-}
-
-void bright_red_led(){
-	P1OUT |= RED_LED;
-}
-
-void bright_green_led(){
-	P1OUT |= GREEN_LED;
-}
-
-void clear_leds()
+void led_dim()
 {
-	active_led = NONE;
-	P1OUT &= ~LEDS;
+    static int blinkLimit = 25;
+    static int blinkCount = 0;
+
+    if (blinkCount++ >= blinkLimit)
+    {
+        blinkCount = 0;
+        P1OUT |= active_led_color == RED ? RED_LED : GREEN_LED;
+    }
+    else
+        P1OUT &= ~(active_led_color == RED ? RED_LED : GREEN_LED);
 }
 
-void led_tick()
+void leds_off()
 {
-	static int ticks = 0;
-	if(ticks++ >= 250) {
-		P1OUT ^= RED_LED;
-		P1OUT ^= GREEN_LED;
-		ticks = 0;
-	}
+    active_led_brightness = OFF;
+    P1OUT &= ~LEDS;
+}
+
+void leds_set_active(Color color, Brightness brightness)
+{
+    active_led_color = color;
+    active_led_brightness = brightness;
+    led_on(color);
+}
+
+void leds_tick()
+{
+    if (active_led_brightness == LOW)
+        led_dim();
+
+    // switch (active_led)
+    // {
+    // case BRIGHT_RED_LED:
+    //     bright_red_led();
+    //     break;
+    // case DIM_RED_LED:
+    //     dim_red_led();
+    //     break;
+    // case BRIGHT_GREEN_LED:
+    //     bright_green_led();
+    //     break;
+    // case DIM_GREEN_LED:
+    //     dim_green_led();
+    //     break;
+    // default:
+    //     leds_off();
+    //     break;
+    // }
 }

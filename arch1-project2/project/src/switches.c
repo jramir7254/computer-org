@@ -2,23 +2,17 @@
 #include "../include/switches.h"
 #include "../include/events.h"
 
-void switches_init()
-{
-    P1DIR &= ~PORT_1_SWITCHES;
-    P1OUT |= PORT_1_SWITCHES;
-    P1REN |= PORT_1_SWITCHES;
-    P1IE |= PORT_1_SWITCHES;
+#define SWITCH_0 BIT3
 
-    P2DIR &= ~PORT_2_SWITCHES;
-    P2REN |= PORT_2_SWITCHES;
-    P2OUT |= PORT_2_SWITCHES;
-    P2IE |= PORT_2_SWITCHES;
+#define SWITCH_1 BIT0
+#define SWITCH_2 BIT1
+#define SWITCH_3 BIT2
+#define SWITCH_4 BIT3
 
-    port_1_update_interrupt_sense();
-    port_2_update_interrupt_sense();
-}
+#define PORT_1_SWITCHES SWITCH_0
+#define PORT_2_SWITCHES (SWITCH_1 | SWITCH_2 | SWITCH_3 | SWITCH_4)
 
-char port_2_update_interrupt_sense()
+static char port_2_update_interrupt_sense()
 {
     char p2val = P2IN;
     P2IES |= (p2val & PORT_2_SWITCHES);
@@ -26,7 +20,7 @@ char port_2_update_interrupt_sense()
     return p2val;
 }
 
-char port_1_update_interrupt_sense()
+static char port_1_update_interrupt_sense()
 {
     char p1val = P1IN;
     P1IES |= (p1val & PORT_1_SWITCHES);
@@ -34,7 +28,7 @@ char port_1_update_interrupt_sense()
     return p1val;
 }
 
-void port_1_interrupt_handler()
+static void port_1_interrupt_handler()
 {
     char p1val = port_1_update_interrupt_sense();
     char switches = ~p1val & PORT_1_SWITCHES;
@@ -43,7 +37,7 @@ void port_1_interrupt_handler()
         port_1_button_pressed();
 }
 
-void port_2_interrupt_handler()
+static void port_2_interrupt_handler()
 {
     char p2val = port_2_update_interrupt_sense();
     char switches = ~p2val & PORT_2_SWITCHES;
@@ -58,6 +52,22 @@ void port_2_interrupt_handler()
         port_2_button_pressed(3);
     else
         port_2_button_released();
+}
+
+void switches_init()
+{
+    P1DIR &= ~PORT_1_SWITCHES;
+    P1OUT |= PORT_1_SWITCHES;
+    P1REN |= PORT_1_SWITCHES;
+    P1IE |= PORT_1_SWITCHES;
+
+    P2DIR &= ~PORT_2_SWITCHES;
+    P2REN |= PORT_2_SWITCHES;
+    P2OUT |= PORT_2_SWITCHES;
+    P2IE |= PORT_2_SWITCHES;
+
+    port_1_update_interrupt_sense();
+    port_2_update_interrupt_sense();
 }
 
 void __interrupt_vec(PORT1_VECTOR) Port_1()

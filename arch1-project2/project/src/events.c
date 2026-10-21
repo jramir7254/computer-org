@@ -3,7 +3,7 @@
 #include "../include/state.h"
 #include "../include/actions.h"
 
-volatile int last_button_pressed = -1;
+int last_button_pressed = -1;
 
 void port_1_button_pressed()
 {
@@ -35,7 +35,6 @@ void port_2_button_pressed(int button)
         toggle_action_4();
         break;
     }
-    // check_sequence(last_button_pressed);
 }
 
 void port_2_button_released()

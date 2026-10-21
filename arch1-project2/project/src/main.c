@@ -17,7 +17,6 @@ int main()
 
 void __interrupt_vec(WDT_VECTOR) WDT() /* ~250 times per second */
 {
-
     state_machine();
     leds_tick();
 }

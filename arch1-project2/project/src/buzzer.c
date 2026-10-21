@@ -3,7 +3,6 @@
 #include "../include/buzzer.h"
 #include "../include/pitches.h"
 #include "../include/sounds.h"
-#include "../include/state.h"
 
 volatile int finished = 0;
 

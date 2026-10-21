@@ -1,8 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-#define MAX_SEED 15
-
 extern volatile int game_seed;
 extern volatile int current_seed;
 

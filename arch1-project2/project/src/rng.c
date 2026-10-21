@@ -1,6 +1,8 @@
 #include "../include/rng.h"
 #include "../include/game.h"
 
+#define MAX_SEED 15
+
 int lfsr()
 {
     int bit3 = (current_seed >> 3) & 1;
@@ -17,7 +19,7 @@ void seed_generator()
     game_seed = seed_tick;
     current_seed = game_seed;
 
-    if (++seed_tick > 15)
+    if (++seed_tick > MAX_SEED)
     {
         seed_tick = 1;
     }

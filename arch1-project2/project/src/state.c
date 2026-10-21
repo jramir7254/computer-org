@@ -59,6 +59,7 @@ void state_machine()
     {
     case GAME_LOAD:
         play_start_sound();
+        alternate_leds();
         seed_generator();
         break;
     case COMPUTER_TURN:
@@ -73,6 +74,7 @@ void state_machine()
         break;
     case WRONG_ANSWER:
         play_wrong_answer_sound();
+        flash_red_led();
         if (finished)
         {
             update_state(COMPUTER_TURN);
